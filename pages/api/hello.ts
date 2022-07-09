@@ -11,6 +11,6 @@ export default function handler(
 	// -> if it is, retrieve it
 	// -> if it is not, init shortening procedure, retrieve it
 	//3. send back the shortened url
-	console.timeLog("log");
+	console.log(`log: ${new Date()}`);
 	res.status(200).json({ shortURL: "http://www.disney.com" });
 }
