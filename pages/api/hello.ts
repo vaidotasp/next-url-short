@@ -1,13 +1,16 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-
-type Data = {
-	msg: string;
-};
+import { PostURLResponse } from "../types";
 
 export default function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<Data>
+	res: NextApiResponse<PostURLResponse>
 ) {
-	res.status(200).json({ msg: "http://www.disney.com" });
+	//1. validate that it is a real URL
+	//2. check if URL is already shortened
+	// -> if it is, retrieve it
+	// -> if it is not, init shortening procedure, retrieve it
+	//3. send back the shortened url
+
+	res.status(200).json({ shortURL: "http://www.disney.com" });
 }

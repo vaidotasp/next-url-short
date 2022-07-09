@@ -1,5 +1,17 @@
 import type { NextPage } from "next";
 import { useState } from "react";
+import { useMutation } from "react-query";
+import { PostURLResponse } from "./types";
+
+async function postURL(url: string): Promise<PostURLResponse> {
+	const res = await fetch("/api/hello", {
+		method: "GET",
+	});
+	if (!res.ok) {
+		throw new Error("network erro");
+	}
+	return res.json();
+}
 
 interface URLInputProps {
 	value: string;
@@ -29,6 +41,10 @@ const Home: NextPage = () => {
 	const [urlVal, setUrlVal] = useState("");
 	const [validationErr, setValidationErr] = useState("");
 
+	const mutation = useMutation(postURL);
+
+	console.log(mutation.data);
+
 	function handleShorten() {
 		const trimVal = urlVal.trim();
 		console.log(urlVal);
@@ -38,11 +54,7 @@ const Home: NextPage = () => {
 			return;
 		}
 
-		fetch("/api/hello", {
-			method: "GET",
-		})
-			.then((res) => res.json())
-			.catch((e) => console.error(e));
+		mutation.mutate(urlVal);
 
 		setValidationErr("");
 	}
