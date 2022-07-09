@@ -38,6 +38,12 @@ const Home: NextPage = () => {
 			return;
 		}
 
+		fetch("/api/hello", {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.catch((e) => console.error(e));
+
 		setValidationErr("");
 	}
 
