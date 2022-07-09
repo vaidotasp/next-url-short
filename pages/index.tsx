@@ -8,7 +8,7 @@ async function postURL(url: string): Promise<PostURLResponse> {
 		method: "GET",
 	});
 	if (!res.ok) {
-		throw new Error("network erro");
+		throw new Error("network error");
 	}
 	return res.json();
 }
