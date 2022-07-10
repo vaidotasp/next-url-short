@@ -1,11 +1,13 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { PostURLResponse } from "./types";
+import { PostURLRequest, PostURLResponse } from "./types";
 
 async function postURL(url: string): Promise<PostURLResponse> {
+	const payload: PostURLRequest = { originalURL: url };
 	const res = await fetch("/api/hello", {
-		method: "GET",
+		method: "POST",
+		body: JSON.stringify(payload),
 	});
 	if (!res.ok) {
 		throw new Error("network error");
@@ -47,15 +49,7 @@ const Home: NextPage = () => {
 
 	function handleShorten() {
 		const trimVal = urlVal.trim();
-		console.log(urlVal);
-		if (!trimVal) {
-			console.log("nothing there!");
-			setValidationErr("input url first!");
-			return;
-		}
-
-		mutation.mutate(urlVal);
-
+		mutation.mutate(trimVal);
 		setValidationErr("");
 	}
 
