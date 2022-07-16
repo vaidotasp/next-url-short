@@ -1,4 +1,4 @@
-import { PostURLRequest, PostURLResponse } from "./types";
+import { PostURLRequest, PostURLResponse } from "../pages/types";
 
 export async function postURL(url: string): Promise<PostURLResponse> {
 	const payload: PostURLRequest = { originalURL: url };
