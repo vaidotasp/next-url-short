@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { postURL } from "./services";
-import { PostURLRequest, PostURLResponse } from "./types";
 
 interface ResponseData {
 	shortURL: string;

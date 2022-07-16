@@ -2,7 +2,7 @@ import { PostURLRequest, PostURLResponse } from "./types";
 
 export async function postURL(url: string): Promise<PostURLResponse> {
 	const payload: PostURLRequest = { originalURL: url };
-	const res = await fetch("/api/hello", {
+	const res = await fetch("/api/shorten", {
 		method: "POST",
 		body: JSON.stringify(payload),
 	});
