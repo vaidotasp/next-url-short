@@ -1,32 +1,18 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import { useMutation } from "react-query";
+import { postURL } from "./services";
 import { PostURLRequest, PostURLResponse } from "./types";
 
-async function postURL(url: string): Promise<PostURLResponse> {
-	const payload: PostURLRequest = { originalURL: url };
-	const res = await fetch("/api/hello", {
-		method: "POST",
-		body: JSON.stringify(payload),
-	});
-	if (!res.ok) {
-		const errResponse = await res.json();
-		console.log(errResponse);
-		const errMsg =
-			res.status === 500 && errResponse.errorMsg
-				? errResponse.errorMsg
-				: "network error";
-		console.log(errMsg);
-		throw new Error(errMsg);
-	}
-	return res.json();
+interface ResponseData {
+	shortURL: string;
 }
 
 interface URLInputProps {
 	value: string;
 	setUrlVal: (val: string) => void;
 }
-const URLInput = ({ value = "", setUrlVal }: URLInputProps) => {
+const URLInput = ({ value, setUrlVal }: URLInputProps) => {
 	function handleUrlInputChange(val: string) {
 		setUrlVal(val);
 	}
@@ -42,16 +28,22 @@ const URLInput = ({ value = "", setUrlVal }: URLInputProps) => {
 	);
 };
 
-const Output = () => {
-	return <div>output</div>;
+const Output = ({ shortURL }: ResponseData) => {
+	console.log("short", shortURL);
+	return <div>output {shortURL}</div>;
 };
 
 const Home: NextPage = () => {
-	const [urlVal, setUrlVal] = useState("");
+	const [urlVal, setUrlVal] = useState("https://www.google.com");
 	const [validationErr, setValidationErr] = useState("");
+	const [data, setData] = useState<ResponseData>();
 
 	const mutation = useMutation(postURL, {
-		onError: (err) => {
+		onSuccess: (data) => {
+			console.log(data);
+			setData(data);
+		},
+		onError: (err: Error) => {
 			console.log(err.message);
 		},
 	});
@@ -88,7 +80,11 @@ const Home: NextPage = () => {
 					</button>
 				</div>
 				<div>
-					{!!validationErr ? <div>Err: {validationErr}</div> : <Output />}
+					{!!validationErr ? (
+						<div>Err: {validationErr}</div>
+					) : (
+						data && <Output shortURL={data.shortURL} />
+					)}
 				</div>
 			</div>
 		</div>
