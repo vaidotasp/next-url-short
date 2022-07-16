@@ -10,7 +10,14 @@ async function postURL(url: string): Promise<PostURLResponse> {
 		body: JSON.stringify(payload),
 	});
 	if (!res.ok) {
-		throw new Error("network error");
+		const errResponse = await res.json();
+		console.log(errResponse);
+		const errMsg =
+			res.status === 500 && errResponse.errorMsg
+				? errResponse.errorMsg
+				: "network error";
+		console.log(errMsg);
+		throw new Error(errMsg);
 	}
 	return res.json();
 }
@@ -43,9 +50,11 @@ const Home: NextPage = () => {
 	const [urlVal, setUrlVal] = useState("");
 	const [validationErr, setValidationErr] = useState("");
 
-	const mutation = useMutation(postURL);
-
-	console.log(mutation.data);
+	const mutation = useMutation(postURL, {
+		onError: (err) => {
+			console.log(err.message);
+		},
+	});
 
 	function handleShorten() {
 		const trimVal = urlVal.trim();

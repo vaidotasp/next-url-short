@@ -14,8 +14,9 @@ function validateURL(urlStr: string) {
 
 export default function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<PostURLResponse | Error>
+	res: NextApiResponse<PostURLResponse | any>
 ) {
+	let shortUrl = "";
 	//1. validate that it is a real URL
 	const request: any | undefined = JSON.parse(req.body);
 	console.log(request?.originalURL);
@@ -23,9 +24,10 @@ export default function handler(
 		console.log(request.originalURL);
 		if (!validateURL(request.originalURL)) {
 			console.log("url invalid, friend");
-			res.status(500).json(new Error("Invalid URL"));
+			res.status(500).json({ errorMsg: "invalid URL" });
 		}
 
+		shortUrl = request.originalURL;
 		console.log("url valid");
 	}
 	//2. check if URL is already shortened
@@ -34,5 +36,5 @@ export default function handler(
 	//3. send back the shortened url
 	// console.log(`log: ${new Date()}`);
 	// console.log(validateU/RL("www.google.com"));
-	res.status(200).json({ shortURL: "http://www.disney.com" });
+	res.status(200).json({ shortURL: shortUrl });
 }
