@@ -44,6 +44,7 @@ const Home: NextPage = () => {
 		},
 		onError: (err: Error) => {
 			console.log(err.message);
+			setValidationErr(err.message);
 		},
 	});
 
