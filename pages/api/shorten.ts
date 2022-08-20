@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostURLRequest, PostURLResponse } from "../types";
 import url from "node:url";
+import { createHash } from "./hash";
 
 export function validateURL(urlStr: string) {
 	try {
@@ -11,6 +12,12 @@ export function validateURL(urlStr: string) {
 		return false;
 	}
 }
+
+//TODO: put this in the db
+
+const shortURLHashMap = new Map<string, string>();
+shortURLHashMap.set("shortxyz", "https://www.google.com");
+createHash();
 
 export default function handler(
 	req: NextApiRequest,
