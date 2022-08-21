@@ -1,6 +1,6 @@
+import { useMutation } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import { useState } from "react";
-import { useMutation } from "react-query";
 import { postURL } from "../utils/services";
 
 interface ResponseData {
