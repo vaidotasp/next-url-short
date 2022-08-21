@@ -11,15 +11,14 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  urls  Url[]
+  id   Int   @id @default(autoincrement())
+  urls Url[]
 }
 
 model Url {
   id          Int    @id @default(autoincrement())
   hash        String @unique
-  originalUrl String
+  originalUrl String @unique
   user        User   @relation(fields: [userId], references: [id])
-  userId      Int    @unique
+  userId      Int
 }

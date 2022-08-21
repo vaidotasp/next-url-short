@@ -1,6 +1,8 @@
 import { createHmac } from "crypto";
+import { nanoid } from "nanoid";
 
 export function createHash() {
+	console.log(nanoid(6));
 	const str = "www.google.com";
 	const key = "abcd";
 	let hash = "";
