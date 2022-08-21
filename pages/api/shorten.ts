@@ -30,15 +30,16 @@ export default async function handler(
 
 		//check if long url has been shortened already
 		const longUrl = await prisma.url.findFirst({
-			where: { originalUrl: "https://www.disney.com" },
+			where: { originalUrl: request.originalURL },
 		});
 		if (longUrl) {
 			console.log("url is hashed, returning hash", longUrl.hash);
 			urlHash = longUrl.hash;
+			res.status(200).json({ shortURL: urlHash });
+			return;
 		}
 
-		// hash it, store it and return it
-
+		//new hash creation flow
 		const newURLHash = nanoid(6);
 		let hashExist = false;
 		do {
@@ -68,12 +69,5 @@ export default async function handler(
 		console.log(longUrl);
 	}
 
-	//2. check if URL is already shortened
-	// -> if it is, retrieve it
-	// -> if it is not, init shortening procedure, retrieve it
-
-	//3. send back the shortened url
-	// console.log(`log: ${new Date()}`);
-	// console.log(validateU/RL("www.google.com"));
 	res.status(200).json({ shortURL: urlHash });
 }
