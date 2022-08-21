@@ -1,8 +1,6 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostURLRequest, PostURLResponse } from "../types";
 import url from "node:url";
-import { createHash } from "./hash";
 import { nanoid } from "nanoid";
 import { PrismaClient } from "@prisma/client";
 
@@ -24,9 +22,7 @@ export default async function handler(
 	const request: any | undefined = JSON.parse(req.body);
 	let urlHash = "";
 	//1. validate that it is a real URL
-	console.log(request?.originalURL);
 	if (request?.originalURL) {
-		console.log(request.originalURL);
 		if (!validateURL(request.originalURL)) {
 			console.log("url invalid, friend");
 			res.status(500).json({ errorMsg: "invalid URL" });
@@ -37,6 +33,7 @@ export default async function handler(
 			where: { originalUrl: "https://www.disney.com" },
 		});
 		if (longUrl) {
+			console.log("url is hashed, returning hash", longUrl.hash);
 			urlHash = longUrl.hash;
 		}
 
@@ -50,6 +47,7 @@ export default async function handler(
 				where: { hash: newURLHash },
 			});
 			if (isURLHashed) {
+				console.log("hash existing");
 				hashExist = true;
 			} else {
 				console.log("creating record");
@@ -58,7 +56,6 @@ export default async function handler(
 					data: {
 						hash: newURLHash,
 						originalUrl: String(request.originalURL),
-						userId: 1,
 						user: {
 							connect: { id: 1 },
 						},
