@@ -56,6 +56,19 @@ const ShortTable = () => {
 					</td>
 					<td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
 						{hash}
+						<button
+							className="ml-2 w-1"
+							onClick={async () => {
+								//save to clip
+								const url = `${window.location.origin}/${hash}`;
+								const type = "text/plain";
+								const blob = new Blob([url], { type });
+								const data = [new ClipboardItem({ [type]: blob })];
+								await navigator.clipboard.write(data);
+							}}
+						>
+							💾
+						</button>
 					</td>
 				</tr>
 			);
