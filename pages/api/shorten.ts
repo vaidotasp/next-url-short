@@ -40,15 +40,17 @@ export default async function handler(
 		}
 
 		//new hash creation flow
-		const newURLHash = nanoid(6);
+		let newURLHash = nanoid(6);
 		let hashExist = false;
 		do {
 			//check in prisma if we got the hash already
-			const isURLHashed = await prisma.url.findFirst({
+			const isHashUsed = await prisma.url.findFirst({
 				where: { hash: newURLHash },
 			});
-			if (isURLHashed) {
+			if (isHashUsed) {
 				console.log("hash existing");
+				// 6 length hash has a high probability of collision and we are inserting records one by one while also searching through hashes before, which is not performant. Ideally we want a available hash table that is at least 1M size from which we could pick out hashes.
+				newURLHash = nanoid(6);
 				hashExist = true;
 			} else {
 				console.log("creating record");
@@ -58,15 +60,15 @@ export default async function handler(
 						hash: newURLHash,
 						originalUrl: String(request.originalURL),
 						user: {
-							connect: { id: 1 },
+							connect: { id: 1 }, //for now we just tag all URLs on a single user
 						},
 					},
 				});
 				console.log(createHashRecord);
 			}
 		} while (hashExist);
-
-		console.log(longUrl);
+		res.status(200).json({ shortURL: newURLHash });
+		return;
 	}
 
 	res.status(200).json({ shortURL: urlHash });
