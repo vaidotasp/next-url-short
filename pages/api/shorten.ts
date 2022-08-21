@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PostURLRequest, PostURLResponse } from "../types";
+import { PostURLResponse } from "../types";
 import url from "node:url";
 import { nanoid } from "nanoid";
 import { PrismaClient } from "@prisma/client";
